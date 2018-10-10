@@ -113,7 +113,7 @@
 		// Convert absolute times to relative times.
 			if ($DataPointName == HEADING_Time) {
 				if ($Index == 0)
-					$DataPoint = 0;
+					$DataPoint = "-";
 				else
 					$DataPoint = $DataPoint - $arrTimings[$Index - 1][HEADING_Time];
 			}
