@@ -97,6 +97,10 @@
 	$objDomPDF->output(array("compress" => 0));
 	$arrTimings[] = GetProfilingInfo("Output");
 
+// We also profile the state after destroying the object, to check for memory leaks.
+	unset($objDomPDF);
+	$arrTimings[] = GetProfilingInfo("End");
+
 // Generate output report.
 
 	print("Profiling PDF generation using '" . $BodyFile . "' over " . $Iterations
@@ -108,6 +112,7 @@
 	}
 	print(PHP_EOL);
 
+	$LastRow = count($arrTimings) - 1;
 	foreach ($arrTimings as $Index => $arrRow) {
 		foreach ($arrRow as $DataPointName => $DataPoint) {
 		// Convert absolute times to relative times.
@@ -119,6 +124,11 @@
 			}
 
 			print(str_pad($DataPoint, OUTPUT_ColumnWidth));
+
+		// For the final row, peak memory and execution time are not interesting.
+		// We just want to check for memory leaks once the object has been destroyed.
+			if ($Index == $LastRow && $DataPointName == HEADING_Memory)
+				break;
 		}
 		print(PHP_EOL);
 	}
