@@ -88,7 +88,7 @@ class PDFLib implements Canvas
     /**
      * Instance of PDFLib class
      *
-     * @var \PDFlib
+     * @var \PDFLib
      */
     private $_pdf;
 
@@ -200,7 +200,7 @@ class PDFLib implements Canvas
     /**
      * Class constructor
      *
-     * @param mixed  $paper       The size of paper to use either a string (see {@link Dompdf\Adapter\CPDF::$PAPER_SIZES}) or
+     * @param string|array $paper The size of paper to use either a string (see {@link Dompdf\Adapter\CPDF::$PAPER_SIZES}) or
      *                            an array(xmin,ymin,xmax,ymax)
      * @param string $orientation The orientation of the document (either 'landscape' or 'portrait')
      * @param Dompdf $dompdf
@@ -258,7 +258,7 @@ class PDFLib implements Canvas
             $this->_pdf->begin_document("", "");
         } else {
             $tmp_dir = $this->_dompdf->getOptions()->getTempDir();
-            $tmp_name = tempnam($tmp_dir, "libdompdf_pdf_");
+            $tmp_name = @tempnam($tmp_dir, "libdompdf_pdf_");
             @unlink($tmp_name);
             $this->_file = "$tmp_name.pdf";
             $this->_pdf->begin_document($this->_file, "");
@@ -450,7 +450,6 @@ class PDFLib implements Canvas
                 $this->_pdf->fit_image($obj, 0, 0, "");
             }
         }
-
     }
 
     /**
@@ -871,6 +870,25 @@ class PDFLib implements Canvas
         $this->_pdf->stroke();
 
         $this->_set_stroke_opacity($this->_current_opacity, "Normal");
+    }
+
+    /**
+     * Draw line at the specified coordinates on every page.
+     *
+     * See {@link Style::munge_color()} for the format of the colour array.
+     *
+     * @param float $x1
+     * @param float $y1
+     * @param float $x2
+     * @param float $y2
+     * @param array $color
+     * @param float $width
+     * @param array $style optional
+     */
+    public function page_line($x1, $y1, $x2, $y2, $color, $width, $style = array())
+    {
+        $_t = 'line';
+        $this->_page_text[] = compact('_t', 'x1', 'y1', 'x2', 'y2', 'color', 'width', 'style');
     }
 
     /**
@@ -1371,6 +1389,11 @@ class PDFLib implements Canvas
                         }
                         $eval->evaluate($code, array('PAGE_NUM' => $p, 'PAGE_COUNT' => $this->_page_count));
                         break;
+
+                    case 'line':
+                        $this->line( $x1, $y1, $x2, $y2, $color, $width, $style );
+                        break;
+
                 }
             }
 

@@ -194,7 +194,7 @@ class Page extends AbstractFrameDecorator
             // Prevent cascading splits
             $frame->split(null, true);
             // We have to grab the style again here because split() resets
-            // $frame->style to the frame's orignal style.
+            // $frame->style to the frame's original style.
             $frame->get_style()->page_break_before = "auto";
             $this->_page_full = true;
             $frame->_already_pushed = true;
@@ -498,7 +498,7 @@ class Page extends AbstractFrameDecorator
         // parents of $frame must fit on the page as well:
         $p = $frame->get_parent();
         while ($p) {
-            $max_y += $p->get_style()->computed_bottom_spacing();
+            $max_y += (float) $p->get_style()->computed_bottom_spacing();
             $p = $p->get_parent();
         }
 

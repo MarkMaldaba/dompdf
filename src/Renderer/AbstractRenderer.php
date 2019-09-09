@@ -401,7 +401,7 @@ abstract class AbstractRenderer
             $this->_canvas->get_cpdf()->addImagePng($filedummy, $x, $this->_canvas->get_height() - $y - $height, $width, $height, $bg);
         } else {
             $tmp_dir = $this->_dompdf->getOptions()->getTempDir();
-            $tmp_name = tempnam($tmp_dir, "bg_dompdf_img_");
+            $tmp_name = @tempnam($tmp_dir, "bg_dompdf_img_");
             @unlink($tmp_name);
             $tmp_file = "$tmp_name.png";
 
@@ -692,7 +692,6 @@ abstract class AbstractRenderer
         $this->_apply_ratio($side, 0.5, $top, $right, $bottom, $left, $x, $y, $length, $r1, $r2);
 
         $this->_border_outset($x, $y, $length, $color, $half_widths, $side, $corner_style, $r1, $r2);
-
     }
 
     /**
@@ -717,7 +716,6 @@ abstract class AbstractRenderer
         $this->_apply_ratio($side, 0.5, $top, $right, $bottom, $left, $x, $y, $length, $r1, $r2);
 
         $this->_border_inset($x, $y, $length, $color, $half_widths, $side, $corner_style, $r1, $r2);
-
     }
 
     /**
